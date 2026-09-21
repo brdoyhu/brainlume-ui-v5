@@ -1,0 +1,83 @@
+/* V5 · Blue Hour — brand palette, September 2026.
+   Existing page geometry and interactions are retained.
+   Red/violet are a visual metaphor for the light session, not visible NIR. */
+:root {
+  --bg:#152440; --surface:#23365b; --surface2:#354574;
+  --line:#9dabe04d; --text:#f4f6ff; --muted:#bdc9e4;
+  --cyan:#a7b9ff; --green:#a8dfd1; --amber:#ffd59a; --red:#ffacb9;
+  --brand-blue:#537ce8; --brand-violet:#8470da; --brand-rose:#ed8faa;
+}
+.p-phone {
+  background:radial-gradient(ellipse at 92% 38%,#7464b12e,transparent 62%),radial-gradient(ellipse at 8% 4%,#315d9747,transparent 56%),linear-gradient(164deg,#1d3558 0%,#202d50 57%,#171f39 100%);
+  border-color:#697797;box-shadow:0 24px 65px #14224030,0 0 0 5px #283449;
+  --nir-rose:#ee96b0;--nir-violet:#b8a3fa;
+}
+.p-phone.is-home {
+  background:radial-gradient(ellipse at 82% 49%,#8274ce33,transparent 56%),radial-gradient(ellipse at 32% 79%,#db84b01c,transparent 32%),linear-gradient(161deg,#1d3658 0%,#26375a 47%,#30375b 73%,#192741 100%);
+}
+.p-phone[data-p1-screen=light] {
+  background:radial-gradient(ellipse at 48% 47%,#9b6ba22b,transparent 48%),radial-gradient(ellipse at 86% 34%,#7164c139,transparent 60%),linear-gradient(160deg,#1d3558,#232e50 65%,#1a233e);
+}
+.p-phone .primary,.p-composer button {
+  background:linear-gradient(115deg,#4b68c7,#7455b5);border:1px solid #a6b3f388;color:#fff;
+  box-shadow:0 5px 22px #182c7326;
+}
+.p-phone .primary:hover,.p-composer button:hover{background:linear-gradient(115deg,#5573d3,#8062c0)}
+.p-phone .primary:active,.p-composer button:active{background:#4a55a0}
+.p-phone .secondary{color:#f1f4ff;border-color:#a1b1d880;background:#91a9e00c}
+.p-phone .text-btn{color:#c1c9fc}
+.p-phone .bottom-nav{background:linear-gradient(112deg,#364b76d9,#45416dde);border-color:#b2bee144;box-shadow:0 8px 26px #0f1b3622}
+.p-phone .bottom-nav button{color:#c9d3e9}
+.p-phone .bottom-nav .active,.p-phone .bottom-nav .active svg{color:#e0d3ff}
+.p-phone .bottom-nav .active:after{background:#c5b1ff}
+.p-tag{color:#f0f3ff;border-color:#a6b7db66;background:#a3b9e50a}
+.p-tag svg{stroke:#b5bcf6}
+.p-tag:hover{background:#969deb20;border-color:#c0cafa}
+.p-composer{background:#99a8d514;border-color:#a9b9e05c}
+.p-composer input::placeholder{color:#bcc9e3}
+.p-greeting{color:#c6d1e7}
+.p-message.user{background:#6965ab52;border-color:#b3a3ec33}
+.p-message.assistant{background:#8aa5dd0e;border-color:#9bafd63b}
+.p-plan{background:linear-gradient(135deg,#5475a640,#7662a025);border-color:#a2b1dd66}
+.p-chain .current i{background:#b4bef6;color:#202a4d;border-color:#c3c9fb}
+.p-chain .done i{background:#435987;color:#e5eeff;border-color:#8c9fc8}
+.p-chain .p-light-step.current i{background:linear-gradient(140deg,#edafca,#b2a7f5);color:#302647;border-color:#d6b9eb}
+.p-nir-label{color:#ead2f4;background:linear-gradient(105deg,#e17d9914,#a08bde20);border-color:#c0a0dc44}
+.p-nir-label.is-idle{color:#bdcbe2;border-color:#9aabc433;background:#8da2bf0b}
+.p-signal-status svg,.p-event svg,.p-recorded>svg,.health-list .save-row>svg,.contact-status.good,.device-overview strong,.dot{color:var(--green)}
+.dot{background:var(--green)}
+.p-notice.warning,.banner.warning{background:#c2913519;border-color:#d9b77680;color:#ffdaa5}
+.p-recorded.attention>svg,.amber{color:#ffd59a}
+.red{color:#ffacb9}
+.p-phone .switch:before{background:#52617f}
+.p-phone .switch[aria-checked=true]:before{background:#7868c5}
+.p-phone .switch:after{background:#f2f4ff}
+.p-phone .sheet{background:linear-gradient(145deg,#2e3c65,#1c2a47);border-color:#9baad1}
+.p-phone .field input,.p-phone .field select{background:#233454;border-color:#7e91bb;color:#f4f6ff}
+.p-phone .p-ai-float{background:linear-gradient(135deg,#4a6bad,#7864aa);border-color:#b7b4eb77}
+.p-phone .p-ai-float svg{color:#fff}
+.ue-meter{--meter:#b8abf5}.ue-meter.aqua{--meter:#9fcfef}.ue-meter.attention{--meter:#c0b0f2}
+.ue-column-pair i{background:#718ab8}.ue-column-pair i.after{background:#b6a7f0}
+.p-dose-chart .curve{stroke:#b8a8fa}.p-dose-chart circle:not(.control){fill:#d4aff2}
+.eeg-trace{stroke:#9ac8ff!important}.channel-2 .eeg-trace{stroke:#c3adff!important}.channel-3 .eeg-trace{stroke:#e4aacb!important}
+.p-phone[data-p1-screen=trends]{background:linear-gradient(150deg,#e5edfb,#e7e5f4 80%,#dde6f7);color:#233456;--text:#233456;--muted:#576887;--cyan:#5863aa;--green:#326e65}
+.p-phone[data-p1-screen=trends] .status,.p-phone[data-p1-screen=trends] h1{color:#233456}
+.p-phone[data-p1-screen=trends] .bottom-nav{background:linear-gradient(115deg,#d1def0ed,#dcd5efed);border-color:#8c9ec055}
+.p-phone[data-p1-screen=trends] .bottom-nav button{color:#536785}
+.p-phone[data-p1-screen=trends] .bottom-nav .active,.p-phone[data-p1-screen=trends] .bottom-nav .active svg{color:#634ea0}
+.p-phone[data-p1-screen=trends] .bottom-nav .active:after{background:#745cae}
+.p-phone[data-p1-screen=trends] .p-setting-link{background:#f7f7ff80;border-color:#92a2c655}
+.p-phone[data-p1-screen=trends] .p-setting-link small{color:#596c8a}
+.p-phone[data-p1-screen=trends] .p-setting-link>svg{color:#6a58a7}
+.p-phone[data-p1-screen=trends] .p-device-pill{color:#4e6287;background:#f8faff44;border-color:#8b9cbd55}
+.p-phone[data-p1-screen=trends] .footnote{color:#5b6a87}
+.p-phone[data-p1-screen=trends] .safe-bottom:after{background:#263757}
+.trend-section{background:#f9fbffa1}.chart .line{stroke:#7564b4}.chart circle{fill:#f8faff;stroke:#7464b4}
+.chart text{fill:#516486}.segmented button.active{background:#f8faff;color:#233456}
+.rail .brand{filter:brightness(.28) grayscale(1)}
+.rail,.inspector{background:#edf0f8;color:#293853;border-color:#acb7d255}
+.stage{background:radial-gradient(ellipse at 52% 34%,#f0f3ff,#d8e1f0 70%,#dedbef)}
+.screen-list button.active{background:#d7dcf2;color:#364c79}
+.platform button.active{background:#6976b9;color:#fff}
+.p-phone button:focus-visible,.p-phone a:focus-visible,.p-phone input:focus-visible,.p-phone summary:focus-visible{outline:2px solid #c1b7ff;outline-offset:3px}
+@media(max-width:700px){.p-phone{border:0;box-shadow:none}}

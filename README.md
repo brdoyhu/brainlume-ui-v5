@@ -1,6 +1,6 @@
-# Brainlume V5 — Warm Still
+# Brainlume V5 — Blue Hour
 
-English interactive UI design prototype, with a warm espresso/copper palette and the P1 conversation-led structure. All data, conversations, signals and device behavior are simulated.
+English interactive UI design prototype, with a deep-ocean blue and violet brand palette and the P1 conversation-led structure. All data, conversations, signals and device behavior are simulated.
 
 - [Try V5](https://brdoyhu.github.io/brainlume-ui-v5/)
 - [Design board](https://brdoyhu.github.io/brainlume-ui-v5/board.html)
