@@ -2,13 +2,14 @@
    Existing page geometry and interactions are retained.
    Red/violet are a visual metaphor for the light session, not visible NIR. */
 :root {
+  --app-background:radial-gradient(ellipse at 92% 38%,#7464b12e,transparent 62%),radial-gradient(ellipse at 8% 4%,#315d9747,transparent 56%),linear-gradient(164deg,#1d3558 0%,#202d50 57%,#171f39 100%);
   --bg:#152440; --surface:#23365b; --surface2:#354574;
   --line:#9dabe04d; --text:#f4f6ff; --muted:#bdc9e4;
   --cyan:#a7b9ff; --green:#a8dfd1; --amber:#ffd59a; --red:#ffacb9;
   --brand-blue:#537ce8; --brand-violet:#8470da; --brand-rose:#ed8faa;
 }
 .p-phone {
-  background:radial-gradient(ellipse at 92% 38%,#7464b12e,transparent 62%),radial-gradient(ellipse at 8% 4%,#315d9747,transparent 56%),linear-gradient(164deg,#1d3558 0%,#202d50 57%,#171f39 100%);
+  background:var(--app-background);
   border-color:#697797;box-shadow:0 24px 65px #14224030,0 0 0 5px #283449;
   --nir-rose:#ee96b0;--nir-violet:#b8a3fa;
 }
@@ -60,20 +61,39 @@
 .ue-column-pair i{background:#718ab8}.ue-column-pair i.after{background:#b6a7f0}
 .p-dose-chart .curve{stroke:#b8a8fa}.p-dose-chart circle:not(.control){fill:#d4aff2}
 .eeg-trace{stroke:#9ac8ff!important}.channel-2 .eeg-trace{stroke:#c3adff!important}.channel-3 .eeg-trace{stroke:#e4aacb!important}
-.p-phone[data-p1-screen=trends]{background:linear-gradient(150deg,#e5edfb,#e7e5f4 80%,#dde6f7);color:#233456;--text:#233456;--muted:#576887;--cyan:#5863aa;--green:#326e65}
-.p-phone[data-p1-screen=trends] .status,.p-phone[data-p1-screen=trends] h1{color:#233456}
-.p-phone[data-p1-screen=trends] .bottom-nav{background:linear-gradient(115deg,#d1def0ed,#dcd5efed);border-color:#8c9ec055}
-.p-phone[data-p1-screen=trends] .bottom-nav button{color:#536785}
-.p-phone[data-p1-screen=trends] .bottom-nav .active,.p-phone[data-p1-screen=trends] .bottom-nav .active svg{color:#634ea0}
-.p-phone[data-p1-screen=trends] .bottom-nav .active:after{background:#745cae}
-.p-phone[data-p1-screen=trends] .p-setting-link{background:#f7f7ff80;border-color:#92a2c655}
-.p-phone[data-p1-screen=trends] .p-setting-link small{color:#596c8a}
-.p-phone[data-p1-screen=trends] .p-setting-link>svg{color:#6a58a7}
-.p-phone[data-p1-screen=trends] .p-device-pill{color:#4e6287;background:#f8faff44;border-color:#8b9cbd55}
-.p-phone[data-p1-screen=trends] .footnote{color:#5b6a87}
-.p-phone[data-p1-screen=trends] .safe-bottom:after{background:#263757}
-.trend-section{background:#f9fbffa1}.chart .line{stroke:#7564b4}.chart circle{fill:#f8faff;stroke:#7464b4}
-.chart text{fill:#516486}.segmented button.active{background:#f8faff;color:#233456}
+/* Trends uses the same dark foundation as the other app destinations. */
+.p-phone[data-p1-screen=trends]{background:var(--app-background);color:var(--text);--text:#f4f6ff;--muted:#bdc9e4;--cyan:#a7b9ff;--green:#a8dfd1}
+.p-phone[data-p1-screen=trends] .status,.p-phone[data-p1-screen=trends] h1{color:var(--text)}
+.p-phone[data-p1-screen=trends] .topbar .brand{filter:invert(1) grayscale(1) brightness(1.12);opacity:1;mix-blend-mode:normal}
+.p-phone[data-p1-screen=trends] .bottom-nav{background:linear-gradient(112deg,#364b76d9,#45416dde);border-color:#b2bee144}
+.p-phone[data-p1-screen=trends] .bottom-nav button{color:#c9d3e9}
+.p-phone[data-p1-screen=trends] .bottom-nav button.active,.p-phone[data-p1-screen=trends] .bottom-nav button.active svg{color:#e0d3ff}
+.p-phone[data-p1-screen=trends] .bottom-nav button.active:after{background:#c5b1ff}
+.p-phone[data-p1-screen=trends] .p-setting-link{background:linear-gradient(115deg,#787bbd23,#7376a620);border-color:#a2b1dd55}
+.p-phone[data-p1-screen=trends] .p-setting-link small{color:#bdc9e4}
+.p-phone[data-p1-screen=trends] .p-setting-link>svg{color:#beb3f3}
+.p-phone[data-p1-screen=trends] .p-device-pill{color:#e2e9fa;background:#a3b9e50c;border-color:#a9b9e03b}
+.p-phone[data-p1-screen=trends] .p-device-pill .dot{background:var(--green)}
+.p-phone[data-p1-screen=trends] .footnote{color:#bdc9e4}
+.p-phone[data-p1-screen=trends] .safe-bottom:after{background:#f2f4ff}
+.p-phone[data-p1-screen=trends] .p-ai-float{background:linear-gradient(135deg,#4a6bad,#7864aa);border-color:#b7b4eb77}
+.p-phone[data-p1-screen=trends] .p-ai-float svg{color:#fff}
+.p-phone[data-p1-screen=trends] .segmented{background:#13213b55;border-color:#94a5cf66}
+.p-phone[data-p1-screen=trends] .segmented button{color:#c9d3e9}
+.p-phone[data-p1-screen=trends] .segmented button.active{background:linear-gradient(115deg,#4b68c7,#7455b5);color:#fff}
+.p-phone[data-p1-screen=trends] .range-caption,.p-phone[data-p1-screen=trends] .trend-caption{color:#bdc9e4}
+.p-phone[data-p1-screen=trends] .trend-section,.p-phone[data-p1-screen=trends] .stat-pair,.p-phone[data-p1-screen=trends] .open-history{background:#9dafe510}
+.p-phone[data-p1-screen=trends] .chart text{fill:#c7d2eb}
+.p-phone[data-p1-screen=trends] .chart .grid{stroke:#94a5cf40}
+.p-phone[data-p1-screen=trends] .chart .line{stroke:#b8a8fa}
+.p-phone[data-p1-screen=trends] .chart circle{fill:#28375a;stroke:#c1b0ff}
+.p-phone[data-p1-screen=trends] .stat-pair strong,.p-phone[data-p1-screen=trends] .history-row strong{color:#f4f6ff}
+.p-phone[data-p1-screen=trends] .stat-pair small,.p-phone[data-p1-screen=trends] .stat-pair .muted,.p-phone[data-p1-screen=trends] .history-row small{color:#bdc9e4}
+.p-phone[data-p1-screen=trends] .stat-pair>div+div,.p-phone[data-p1-screen=trends] .history-row{border-color:#94a5cf40}
+.p-phone[data-p1-screen=trends] .history-row>svg,.p-phone[data-p1-screen=trends] .mood{color:#c7d2eb}
+.p-phone[data-p1-screen=trends] .mood i{background:#bdafea}
+.p-phone[data-p1-screen=trends] .mood.good{color:#a8dfd1}
+.p-phone[data-p1-screen=trends] .mood.good i{background:#a8dfd1}
 .rail .brand{filter:brightness(.28) grayscale(1)}
 .rail,.inspector{background:#edf0f8;color:#293853;border-color:#acb7d255}
 .stage{background:radial-gradient(ellipse at 52% 34%,#f0f3ff,#d8e1f0 70%,#dedbef)}
@@ -81,3 +101,8 @@
 .platform button.active{background:#6976b9;color:#fff}
 .p-phone button:focus-visible,.p-phone a:focus-visible,.p-phone input:focus-visible,.p-phone summary:focus-visible{outline:2px solid #c1b7ff;outline-offset:3px}
 @media(max-width:700px){.p-phone{border:0;box-shadow:none}}
+
+/* Larger, airy photon volume; compact heights retain the existing touch layout. */
+.p-home-hero .p-orb{width:265px;height:265px;min-height:140px;max-width:100%}
+@media(max-width:700px){.p-home-hero .p-orb{width:260px;height:260px}}
+@media(max-width:700px) and (max-height:740px){.p-home-hero .p-orb{width:150px;height:150px;min-height:55px}}

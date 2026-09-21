@@ -69,7 +69,27 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&p1IsModule
 window.addEventListener('keydown',e=>{if(!P.end)return;if(e.key==='Escape'){e.preventDefault();pAct('cancel-end','');}if(e.key==='Tab'){const a=[...document.querySelectorAll('.sheet button')];if(e.shiftKey&&document.activeElement===a[0]){e.preventDefault();a[a.length-1].focus();}else if(!e.shiftKey&&document.activeElement===a[a.length-1]){e.preventDefault();a[0].focus();}}});
 function pValidSeconds(){const full=Math.floor(S.elapsed/60),part=S.elapsed%60;return full*56+Math.max(0,part-4);}
 setInterval(()=>{if(new URLSearchParams(location.search).get('embed')==='1'||!p1IsModule()||S.screen==='guide'||S.paused||S.bad||S.disconnected||P.end||S.modal||document.hidden||P.temperatureFault)return;const lastPart=Math.floor(S.elapsed/60);S.elapsed++;if(p1IsMeasure()&&S.elapsed>=240){pFinish();return;}if(S.screen==='light'&&S.elapsed>=240){pFinish();return;}if(p1IsMeasure()&&Math.floor(S.elapsed/60)!==lastPart){render(true);const part=Math.floor(S.elapsed/60);if(part!==2)pSpeak(part===1?'Eyes closed':'Eyes open');return;}document.getElementById('p-clock')?.replaceChildren(document.createTextNode(time(S.elapsed)));if(document.getElementById('p-valid'))document.getElementById('p-valid').textContent=`${time(pValidSeconds())} usable signal · Period ${Math.min(4,Math.floor(S.elapsed/60)+1)} of 4`;if(S.screen==='light'){document.getElementById('p-temperature').textContent=(36.4+S.elapsed/240*1.9).toFixed(1);document.getElementById('p-energy').textContent=Math.round(S.elapsed/240*52);}if(S.screen==='settle'){const d=Math.max(.2,1.9-S.elapsed*.015);document.getElementById('p-delta').textContent=`+${d.toFixed(1)}°C`;document.getElementById('p-temperature').textContent=(36.4+d).toFixed(1);P.stableHold=d<=.3?(P.stableHold||0)+1:0;if(P.stableHold>=20){P.settled=true;pFinish();return;}if(S.elapsed===120)render(true);}},1000);
-let pFrame=0,pLast=0,pPhase=0;
+// Seeded volume and clustered filaments: stable across renders, softly rotating in depth.
+const pPhotonColors=['133,191,255','182,155,255','246,133,166'];
+const pPhotonField=(()=>{
+  let seed=91821;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+  return Array.from({length:1700},(_,i)=>{
+    const filament=i<980,angle=rand()*Math.PI*2;
+    const y=rand()*2-1;
+    const r=filament?.84+rand()*.17:Math.cbrt(rand())*.98;
+    const ring=Math.sqrt(1-y*y);
+    return {x:Math.cos(angle)*ring*r,y:y*r,z:Math.sin(angle)*ring*r,
+      size:.8+Math.pow(rand(),2)*3.1,spark:rand(),phase:rand()*Math.PI*2,
+      color:rand(),filament};
+  });
+})();
+const pPhotonGlows=pPhotonColors.map(rgb=>{
+  const c=document.createElement('canvas');c.width=c.height=32;
+  const ctx=c.getContext('2d'),g=ctx.createRadialGradient(16,16,0,16,16,16);
+  g.addColorStop(0,`rgba(${rgb},.65)`);g.addColorStop(.18,`rgba(${rgb},.22)`);g.addColorStop(1,`rgba(${rgb},0)`);
+  ctx.fillStyle=g;ctx.fillRect(0,0,32,32);return c;
+});
+let pLast=0,pPhase=0;
 function pAnimate(t){
   requestAnimationFrame(pAnimate);
   const c=document.querySelector('.p-nebula');
@@ -78,30 +98,40 @@ function pAnimate(t){
   const frozen=reduced||S.paused||S.bad||S.disconnected||P.end;
   if(frozen&&c.dataset.drawn)return;
   if(t-pLast<45)return;
-  if(!frozen)pPhase+=Math.min(70,t-pLast)*.00013;
+  if(!frozen)pPhase+=Math.min(70,t-pLast)*.00010;
   pLast=t;
   const ctx=c.getContext('2d'),light=S.screen==='light',home=S.screen==='home';
-  const blue='123,181,255',red='246,133,166',violet='179,150,255';
   ctx.clearRect(0,0,560,560);
-  // Restrained overlapping halos; the point field remains the primary visual.
-  [[260,270,blue,.045],[235,305,red,light?.10:home?.046:.02],[320,230,violet,light?.09:home?.055:.025]].forEach(([x,y,rgb,alpha])=>{
-    const g=ctx.createRadialGradient(x,y,15,x,y,220);
-    g.addColorStop(0,`rgba(${rgb},${alpha})`);g.addColorStop(.6,`rgba(${rgb},${alpha*.65})`);g.addColorStop(1,`rgba(${rgb},0)`);
+  // Localised haze leaves the sphere airy, without a solid disc or outline.
+  [[199,184,0,.075],[356,326,1,.060],[307,391,2,light?.048:.022]].forEach(([x,y,color,alpha])=>{
+    const g=ctx.createRadialGradient(x,y,0,x,y,172);
+    g.addColorStop(0,`rgba(${pPhotonColors[color]},${alpha})`);g.addColorStop(1,`rgba(${pPhotonColors[color]},0)`);
     ctx.fillStyle=g;ctx.fillRect(0,0,560,560);
   });
-  for(let i=0;i<560;i++){
-    const seed=(i*73)%100,redShare=light?27:home?14:10,violetShare=light?40:home?38:28;
-    const rgb=seed<redShare?red:seed<redShare+violetShare?violet:blue,accent=rgb!==blue;
-    const a=i*2.39996+pPhase*(.2+i%4*.03),z=1-2*(i+.5)/560,r=210*Math.sqrt(1-z*z);
-    const x=280+Math.cos(a)*r,y=280+z*205+Math.sin(a)*r*.10;
-    const alpha=(accent?.53:.38)+.40*(.5+.5*Math.sin(i+pPhase)),radius=(accent?1.65:1.1)+i%4*.36;
-    if(accent&&i%3===0){ctx.beginPath();ctx.fillStyle=`rgba(${rgb},${alpha*.10})`;ctx.arc(x,y,radius*3.2,0,Math.PI*2);ctx.fill();}
-    ctx.beginPath();ctx.fillStyle=`rgba(${rgb},${alpha})`;ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill();
+  const rotation=pPhase*.20,cs=Math.cos(rotation),sn=Math.sin(rotation),breath=1+Math.sin(pPhase*.8)*.012;
+  for(const p of pPhotonField){
+    const xx=p.x*cs+p.z*sn,zz=p.z*cs-p.x*sn;
+    const scale=1+zz*.065,r=218*breath;
+    const x=280+(xx*.975+p.y*.14)*r*scale,y=280+(p.y*.975-xx*.14)*r*scale;
+    // A sweeping bright filament and an opposite violet cluster match the reference's uneven density.
+    const ribbon=.5+.5*Math.sin(p.y*7.5+Math.atan2(p.z,p.x)*2.1+pPhase*.15);
+    const cluster=Math.exp(-((xx+.49)**2+(p.y+.43)**2)*4.5);
+    const front=(zz+1)*.5;
+    const color=p.color<(light?.19:.12)?2:p.color<.53?1:0;
+    const rgb=pPhotonColors[color];
+    const twinkle=.80+.20*Math.sin(p.phase+pPhase*(.5+p.spark));
+    const centerMask=!home&&Math.hypot(x-280,(y-280)*1.35)<78?.25:1;
+    const alpha=Math.min(.98,(.25+front*.44+ribbon*.25+cluster*.42)*twinkle)*centerMask;
+    const size=p.size*(.7+front*.38)*(p.spark>.97?1.3:1);
+    if(p.spark>.77||cluster>.40){
+      const glow=size*(p.spark>.96?10:6);
+      ctx.globalAlpha=alpha*(p.spark>.96?.90:.56);
+      ctx.drawImage(pPhotonGlows[color],x-glow/2,y-glow/2,glow,glow);
+    }
+    ctx.globalAlpha=alpha;
+    ctx.beginPath();ctx.fillStyle=rgb===pPhotonColors[0]&&(p.spark>.88||cluster>.65)?'#deedff':`rgb(${rgb})`;
+    ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();
   }
-  if(home&&!frozen){
-    const cycle=t%10500,channel=Math.floor(t/10500)%3;
-    if(cycle<2400){const alpha=Math.sin(cycle/2400*Math.PI)*.3;ctx.strokeStyle=`rgba(${blue},${alpha})`;ctx.lineWidth=1.2;ctx.beginPath();for(let j=0;j<Math.min(280,cycle/1.8);j++){const x=140+j,y=250+channel*27+Math.sin(j*.35+channel)*5+Math.sin(j*.81)*2;if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
-  }
-  c.dataset.drawn='1';
+  ctx.globalAlpha=1;c.dataset.drawn='1';
 }
 const pParams=new URLSearchParams(location.search);if(pParams.get('mode'))P.mode=['regular','calibration','washout'].includes(pParams.get('mode'))?pParams.get('mode'):'regular';if(pParams.get('screen')&&screens.flatMap(x=>x[1]).some(x=>x[0]===pParams.get('screen')))S.screen=pParams.get('screen');P.type=['measure','result'].includes(S.screen)?'check':'recovery';S.intent=P.type;if(p1ModuleScreens.includes(S.screen))P.completed=p1Sequence().slice(0,Math.max(0,p1Sequence().indexOf(S.screen)));const pState=pParams.get('state');if(pState==='conversation'){pAdd('user',{text:'Anxious'});pAdd('ai',{text:'Let’s take a quiet moment and check in.'});pAdd('plan',{type:'recovery',used:false});}if(pState==='goals'){pAdd('ai',{text:'What would you like to work toward?'});pAdd('goals',{});}if(pState==='paused'){S.paused=true;P.interrupted=true;}if(pState==='sensor-fault')P.temperatureFault=true;if(pState==='cal-complete')P.calibrationStatus='done';if(pState==='no-response')P.calibrationStatus='no-response';if(pState==='evaluation')P.calibrationStatus='evaluation';if(pState==='end'){S.modal='';P.end=true;S.paused=true;}if(pState==='single-failure')P.type='check';if(pState==='closed-1')S.elapsed=60;if(pState==='closed-2')S.elapsed=120;if(pState==='open-2')S.elapsed=180;if(pState==='self-card'){P.chat=[];pAdd('event',{text:'After measurement complete'});pAdd('self',{});P.active=true;P.pending='self';}if(pState==='sensor-fault')P.temperatureFault=true;if(pState==='poor-contact'&&p1IsMeasure()){S.bad=true;S.paused=true;P.interrupted=true;}if(P.mode==='washout')P.washout=true;render();requestAnimationFrame(pAnimate);
